@@ -1,5 +1,5 @@
 from cls.data_utils import *
-from cls.lstm_cls import LSTM_Cls
+from cls.bilstm_cls import BiLSTM_Cls
 import tensorflow as tf
 import numpy as np
 from tensorflow.contrib import learn
@@ -80,14 +80,13 @@ print("Train/Dev split: {:d}/{:d}".format(len(y_train), len(y_dev)))  # Train/De
 with tf.Graph().as_default():
     sess = tf.Session()
     with sess.as_default():
-        model = LSTM_Cls(
+        model = BiLSTM_Cls(
             sequence_length=x_train.shape[1],
             num_classes=y_train.shape[1],
             vocab_size=len(vocab_processor.vocabulary_),
             embedding_size=FLAGS.embedding_dim,
             hidden_dim=FLAGS.hidden_dim,
-            keep_prob=FLAGS.dropout_keep_prob,
-            num_layers=FLAGS.num_layers
+            keep_prob=FLAGS.dropout_keep_prob
         )
         # Define Training procedure
         optimizer = tf.train.AdamOptimizer()

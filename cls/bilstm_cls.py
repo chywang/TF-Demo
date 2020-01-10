@@ -1,15 +1,15 @@
 import tensorflow as tf
 
 
-class LSTM_Cls():
-    def __init__(self, sequence_length, num_classes, vocab_size, embedding_size, hidden_dim, keep_prob, num_layers):
+class BiLSTM_Cls():
+    def __init__(self, sequence_length, num_classes, vocab_size, embedding_size, hidden_dim, keep_prob):
         # input, output
         self.input_x = tf.placeholder(tf.int32, [None, sequence_length], name="input_x")
         self.input_y = tf.placeholder(tf.float32, [None, num_classes], name="input_y")
         self.embedding_placeholder = tf.placeholder(tf.float32, [vocab_size, embedding_size])
 
         def lstm_cell():
-            return tf.contrib.rnn.BasicLSTMCell(hidden_dim, state_is_tuple=True)
+            return tf.contrib.rnn.LSTMCell(hidden_dim, state_is_tuple=True)
 
         def dropout():
             cell = lstm_cell()
@@ -22,13 +22,16 @@ class LSTM_Cls():
             self.raw_embedded = tf.nn.embedding_lookup(embedding_init, self.input_x)
 
         # lstm layers
-        with tf.name_scope("lstm"):
-            cells = [dropout() for _ in range(num_layers)]
-            rnn_cell = tf.contrib.rnn.MultiRNNCell(cells, state_is_tuple=True)
-            _outputs, _ = tf.nn.dynamic_rnn(cell=rnn_cell, inputs=self.raw_embedded,
-                                            dtype=tf.float32)
-            # last = _outputs[:, -1, :]
-            last = tf.reduce_mean(_outputs, axis=1)
+        with tf.name_scope("bilstm"):
+            lstm_cell_fw = dropout()
+            lstm_cell_bw = dropout()
+            _outputs, _ = tf.nn.bidirectional_dynamic_rnn(cell_fw=lstm_cell_fw, cell_bw=lstm_cell_bw,
+                                                          inputs=self.raw_embedded,
+                                                          dtype=tf.float32)
+            # [batch_size, max_time, depth]
+            last = tf.concat(_outputs, 2)
+            # [batch_size, depth]
+            last = tf.reduce_mean(last, axis=1)
 
         # output layer
         with tf.name_scope("output"):
