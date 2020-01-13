@@ -30,7 +30,10 @@ class TransformerEncoder():
 
         # output layer
         with tf.name_scope("output"):
-            self.logit = tf.layers.dense(self.output, num_classes)
+            dense_out = tf.layers.dense(self.output, self.embedding_size)
+            dense_out = tf.nn.relu(dense_out)
+
+            self.logit = tf.layers.dense(dense_out, num_classes)
             self.prob = tf.nn.sigmoid(self.logit)
             self.predictions = tf.argmax(self.logit, 1, name="predictions")
 

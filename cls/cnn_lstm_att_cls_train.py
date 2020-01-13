@@ -55,9 +55,10 @@ def test(x_batch, y_batch, curr_epoch):
         model.embedding_placeholder: embedding,
         model.dropout_keep_prob: FLAGS.dropout_keep_prob
     }
-    loss, accuracy = sess.run(
-        [model.loss, model.accuracy],
+    logit, loss, accuracy = sess.run(
+        [model.logit, model.loss, model.accuracy],
         feed_dict)
+    print(logit)
     print("epoch {0} test acc {1}".format(curr_epoch, accuracy))
 
 
