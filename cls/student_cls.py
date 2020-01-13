@@ -2,7 +2,7 @@ import tensorflow as tf
 
 
 class Student_Cls():
-    def __init__(self, sequence_length, num_classes, vocab_size, embedding_size, hidden_dim, num_layers, temperature,
+    def __init__(self, sequence_length, num_classes, vocab_size, embedding_size, hidden_dim, temperature,
                  lam):
         # input, output
         self.input_x = tf.placeholder(tf.int32, [None, sequence_length], name="input_x")
