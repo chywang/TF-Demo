@@ -15,7 +15,7 @@ class Student_Cls():
             W = tf.Variable(tf.constant(0.0, shape=[vocab_size, embedding_size]), trainable=True, name="W")
             embedding_init = W.assign(self.embedding_placeholder)
             self.raw_embedded = tf.nn.embedding_lookup(embedding_init, self.input_x)
-            self.raw_embedded=tf.reduce_mean(self.raw_embedded, axis=1)
+            self.raw_embedded = tf.reduce_mean(self.raw_embedded, axis=1)
 
         # output layer
         with tf.name_scope("output"):
@@ -36,5 +36,6 @@ class Student_Cls():
             # self.accuracy = tf.reduce_mean(tf.cast(correct_predictions, "float"), name="accuracy")
 
             self.teacher_loss = tf.nn.softmax_cross_entropy_with_logits(logits=self.logit / temperature,
-                                                                        labels=self.teacher_y / temperature)
+                                                                        labels=tf.nn.sigmoid(
+                                                                            self.teacher_y / temperature))
             self.teacher_loss = tf.reduce_mean(self.teacher_loss) * lam + self.loss * (1 - lam)

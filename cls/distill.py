@@ -93,7 +93,7 @@ tf.flags.DEFINE_integer("hidden_dim", 300, "")
 tf.flags.DEFINE_integer("num_layers", 2, "")
 tf.flags.DEFINE_integer("batch_size", 128, "")
 tf.flags.DEFINE_integer("teacher_num_epochs", 200, "")
-tf.flags.DEFINE_integer("student_num_epochs", 200, "")
+tf.flags.DEFINE_integer("student_num_epochs", 100, "")
 tf.flags.DEFINE_integer("temperature", 1, "")
 tf.flags.DEFINE_float("lam", .2, "")
 tf.flags.DEFINE_float("dropout_keep_prob", 0.5, "")
@@ -140,7 +140,6 @@ student_network = Student_Cls(
     vocab_size=len(vocab_processor.vocabulary_),
     embedding_size=FLAGS.embedding_dim,
     hidden_dim=FLAGS.hidden_dim,
-    num_layers=FLAGS.num_layers,
     temperature=FLAGS.temperature,
     lam=FLAGS.lam
 )
